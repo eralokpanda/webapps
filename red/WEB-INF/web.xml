@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<web-app>
+	<context-param>
+		<param-name>name</param-name>
+		<param-value>Alok Panda</param-value>
+	</context-param>
+    <servlet>
+		<init-param>
+			<param-name>clg</param-name>
+			<param-value>CEB</param-value>
+		</init-param>
+        <servlet-name>s1</servlet-name>
+        <servlet-class>Red</servlet-class>
+    </servlet>
+	<servlet>
+		<servlet-name>s2</servlet-name>
+		<servlet-class>Red2</servlet-class>
+	</servlet>
+
+    <servlet-mapping>
+        <servlet-name>s1</servlet-name>
+        <url-pattern>/url</url-pattern>
+    </servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>s2</servlet-name>
+		<url-pattern>/data</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>  
+   <welcome-file>index.html</welcome-file>   
+  </welcome-file-list> 
+</web-app>
