@@ -66,11 +66,11 @@ public class Register extends HttpServlet {
 		
 		response.setContentType("text/html");
 		int flag = 0;//To check whether the data successfully enter into database or not
-		if (!pass1.equals(pass2)) {
+		if ((!pass1.equals(pass2)) | (fname.equals("")) | (lname.equals("")) | (email.equals("")) | (pass1.equals("")) ) {
 			
 			PrintWriter pw = response.getWriter();
 			
-			pw.print("<html><center>Failure Password does not match </center></html>");
+			pw.print("<html><center>Failure!! Form not filled correctly </center></html>");
 			request.getRequestDispatcher("register.html").include(request, response);
 		} else {
 			
