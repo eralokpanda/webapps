@@ -1,6 +1,7 @@
 package com.ap.app;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,6 +21,11 @@ import javax.servlet.http.HttpServletResponse;
 
 public class Register extends HttpServlet {
 	
+	static String DB_DRIVER;
+	static String DB_URL;
+	static String DB_USER;
+	static String DB_PASS;
+	
 	String fname = null;
 	String lname = null;
 	String email = null;
@@ -35,10 +41,10 @@ public class Register extends HttpServlet {
 			
 		ServletContext globalData = config.getServletContext();
 		
-		String DB_DRIVER = globalData.getInitParameter("dbDriver");
-		String DB_URL = globalData.getInitParameter("dbUrl");
-		String DB_USER = globalData.getInitParameter("dbUser"); 
-		String DB_PASS = globalData.getInitParameter("dbPass");
+		DB_DRIVER = globalData.getInitParameter("dbDriver");
+		DB_URL = globalData.getInitParameter("dbUrl");
+		DB_USER = globalData.getInitParameter("dbUser"); 
+		DB_PASS = globalData.getInitParameter("dbPass");
 		
 		try {
 		Class.forName(DB_DRIVER); //loading database driver class
@@ -58,21 +64,29 @@ public class Register extends HttpServlet {
 		pass1 = request.getParameter("pass1").trim();
 		pass2 = request.getParameter("pass2").trim();
 		
-		if (pass1.equals(pass2)) {
-			int flag = 0;//To check whether the data successfully enter into database or not
+		response.setContentType("text/html");
+		int flag = 0;//To check whether the data successfully enter into database or not
+		if (!pass1.equals(pass2)) {
+			
+			PrintWriter pw = response.getWriter();
+			
+			pw.print("<html><center>Failure Password does not match </center></html>");
+			request.getRequestDispatcher("register.html").include(request, response);
+		} else {
+			
 			try {
 				con = DriverManager.getConnection(DB_URL,DB_USER,DB_PASS);// getting database connection object
 				st = con.createStatement(); //getting statement object from connection object
-				flag = st.executeUpdate("insert into user values(1,'"+fname+"','"+lname+"','"+email+"','"+pass+"')");
+				flag = st.executeUpdate("insert into user values(1,'"+fname+"','"+lname+"','"+email+"','"+pass1+"')");
 			} catch (SQLException e) {
 			System.err.println(e);
+			}	
+				
+			if(flag == (int)1) {
+				request.getRequestDispatcher("registerSuccess.html").include(request, response);
+			} else {
+			request.getRequestDispatcher("registerFailure.html").include(request, response);
 			}
-		}
-		response.setContentType("text/html");
-		if(flag == (int)1) {
-			request.getRequestDispatcher("registerSuccess.html").include(request, response);
-		} else {
-			request.getRequestDispatcher("registerfailure.html").include(request, response);
 		}
 		
 		
